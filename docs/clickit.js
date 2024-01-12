@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     const e_target = document.getElementById('target');
     const e_playarea = document.getElementById('playarea');
+    const e_points = document.getElementById('points');
 
     const target = {
         width: 200,
@@ -40,11 +41,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
         else {
             // Wähle das größere aus 0 oder points - 1
             // points = Math.max(0, points - 1);
-            
+
             // points = (points <= 0) ? 0 : points - 1;
             points = (points > 0) ? points - 1 : 0;
         }
-        console.log(points);
+        
+        e_points.innerText = points;
         
         const position = getRandomPosition(target, playarea);
         setPosition(position, e_target);
