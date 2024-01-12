@@ -1,3 +1,93 @@
+class Game {
+    /**
+     * 
+     * @param {number} duration Dauer in Sekunden
+     */
+    constructor (duration) {
+
+        this.duration = duration;
+        
+        this.status = 'init'; // Spielphase (init, playing, paused, done)
+
+        this.points = {
+            value: 0,
+            element: document.getElementById('points')
+        }
+        this.countdown = {
+            value: 0,
+            element: document.getElementById('countdown'),
+            interval: null
+        }
+        this.target = {
+            width: 200,
+            height: 150,
+            element: document.getElementById('target')
+        }
+        this.playarea = {
+            width: 800,
+            height: 600,
+            element: document.getElementById('playarea')
+        }
+    }
+
+    /**
+     * [init]--start()-->[playing]
+     */
+    start = () => {
+        this.countdown.value = this.duration;
+        
+        this.countdown.interval = window.setInterval(() => {
+
+            this.countdown.value -= 1;
+            this.countdown.element.innerText = this.countdown.value;
+            
+            if (this.countdown.value <= 0) {
+                this.stop();
+            }
+        }, 1 * 1000);
+
+        const position = getRandomPosition(this.target, this.playarea);
+        setPosition(position, this.target.element);
+
+        this.playarea.element.addEventListener('click', (event) => {
+
+            if (this.countdown.value > 0) {
+    
+                console.log(event.target === this.target.element ? 'Treffer!' : 'Daneben!');
+    
+                if (event.target === this.target.element) {
+                    this.points.value += 1;
+                }
+                else {
+                    this.points.value = (this.points.value > 0) ? this.points.value - 1 : 0;
+                }
+    
+                this.points.element.innerText = this.points.value;
+                
+                const position = getRandomPosition(this.target, this.playarea);
+                setPosition(position, this.target.element);
+            }
+        });
+    }
+
+    /**
+     * [playing]--pause()-->[paused]
+     */
+    pause = () => {}
+
+    /**
+     * [paused]--resume()-->[playing]
+     */
+    resume = () => {}
+
+    /**
+     * [playing]--stop()-->[done]
+     */
+    stop = () => {
+        window.clearInterval(this.countdown.interval);
+    }
+}
+
 const getRandomPosition = (target, playarea) => {
 
     const top = Math.random() * (playarea.height - target.height);
@@ -12,61 +102,10 @@ const setPosition = (position, elem) => {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    console.log('Hello World!');
-
-    const e_target = document.getElementById('target');
-    const e_playarea = document.getElementById('playarea');
-    const e_points = document.getElementById('points');
-    const e_countdown = document.getElementById('countdown');
-
-    const target = {
-        width: 200,
-        height: 150
-    }
-    const playarea = {
-        width: 800,
-        height: 600
-    }
-    let points = 0;
-    let timer = 30;
-
-    const position = getRandomPosition(target, playarea);
-    setPosition(position, e_target);
-
-    /* Countdown */
-
-    // wiederhole 1 Mal pro Sekunde
-    const countdown = window.setInterval(() => {
-        timer = timer - 1;
-        e_countdown.innerText = timer;
-    }, 1 * 1000);
-
-    // warte 30 Sekunden
-    window.setTimeout(() => {
-        window.clearInterval(countdown);
-    }, 30 * 1000);
-
-    e_playarea.addEventListener('click', (event) => {
-
-        if (timer > 0) {
-
-            console.log(event.target === e_target ? 'Treffer!' : 'Daneben!');
-
-            if (event.target === e_target) {
-                points += 1;
-            }
-            else {
-                // Wähle das größere aus 0 oder points - 1
-                // points = Math.max(0, points - 1);
-
-                // points = (points <= 0) ? 0 : points - 1;
-                points = (points > 0) ? points - 1 : 0;
-            }
-
-            e_points.innerText = points;
-            
-            const position = getRandomPosition(target, playarea);
-            setPosition(position, e_target);
-        }
+    
+    const game = new Game(30);
+    
+    document.getElementById('start').addEventListener('click', (event) => {
+        game.start();
     });
 });
