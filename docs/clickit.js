@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const e_target = document.getElementById('target');
     const e_playarea = document.getElementById('playarea');
     const e_points = document.getElementById('points');
+    const e_countdown = document.getElementById('countdown');
 
     const target = {
         width: 200,
@@ -27,28 +28,45 @@ document.addEventListener('DOMContentLoaded', (event) => {
         height: 600
     }
     let points = 0;
+    let timer = 30;
 
     const position = getRandomPosition(target, playarea);
     setPosition(position, e_target);
 
+    /* Countdown */
+
+    // wiederhole 1 Mal pro Sekunde
+    const countdown = window.setInterval(() => {
+        timer = timer - 1;
+        e_countdown.innerText = timer;
+    }, 1 * 1000);
+
+    // warte 30 Sekunden
+    window.setTimeout(() => {
+        window.clearInterval(countdown);
+    }, 30 * 1000);
+
     e_playarea.addEventListener('click', (event) => {
 
-        console.log(event.target === e_target ? 'Treffer!' : 'Daneben!');
+        if (timer > 0) {
 
-        if (event.target === e_target) {
-            points += 1;
-        }
-        else {
-            // Wähle das größere aus 0 oder points - 1
-            // points = Math.max(0, points - 1);
+            console.log(event.target === e_target ? 'Treffer!' : 'Daneben!');
 
-            // points = (points <= 0) ? 0 : points - 1;
-            points = (points > 0) ? points - 1 : 0;
+            if (event.target === e_target) {
+                points += 1;
+            }
+            else {
+                // Wähle das größere aus 0 oder points - 1
+                // points = Math.max(0, points - 1);
+
+                // points = (points <= 0) ? 0 : points - 1;
+                points = (points > 0) ? points - 1 : 0;
+            }
+
+            e_points.innerText = points;
+            
+            const position = getRandomPosition(target, playarea);
+            setPosition(position, e_target);
         }
-        
-        e_points.innerText = points;
-        
-        const position = getRandomPosition(target, playarea);
-        setPosition(position, e_target);
     });
 });
