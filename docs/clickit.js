@@ -49,6 +49,9 @@ class Game {
         const position = getRandomPosition(this.target, this.playarea);
         setPosition(position, this.target.element);
 
+        document.body.classList.remove('init');
+        document.body.classList.add('playing');
+
         this.playarea.element.addEventListener('click', (event) => {
 
             if (this.countdown.value > 0) {
@@ -68,22 +71,49 @@ class Game {
                 setPosition(position, this.target.element);
             }
         });
+
+        this.playarea.element.addEventListener('mouseleave', this.pause);
+        this.playarea.element.addEventListener('mouseenter', this.resume);
     }
 
     /**
      * [playing]--pause()-->[paused]
      */
-    pause = () => {}
+    pause = () => {
+        document.body.classList.remove('playing');
+        document.body.classList.add('paused');
+        
+        window.clearInterval(this.countdown.interval);
+    }
 
     /**
      * [paused]--resume()-->[playing]
      */
-    resume = () => {}
+    resume = () => {
+        document.body.classList.remove('paused');
+        document.body.classList.add('playing');
+        
+        this.countdown.interval = window.setInterval(() => {
+
+            this.countdown.value -= 1;
+            this.countdown.element.innerText = this.countdown.value;
+            
+            if (this.countdown.value <= 0) {
+                this.stop();
+            }
+        }, 1 * 1000);
+    }
 
     /**
      * [playing]--stop()-->[done]
      */
     stop = () => {
+        document.body.classList.remove('playing');
+        document.body.classList.add('gameover');
+
+        this.playarea.element.removeEventListener('mouseleave', this.pause);
+        this.playarea.element.removeEventListener('mouseenter', this.resume);
+        
         window.clearInterval(this.countdown.interval);
     }
 }
@@ -103,9 +133,13 @@ const setPosition = (position, elem) => {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     
-    const game = new Game(30);
+    const game = new Game(10);
     
     document.getElementById('start').addEventListener('click', (event) => {
         game.start();
     });
+
+    window.addEventListener('resize', (event) => {
+        console.log(window.innerWidth, window.innerHeight);
+    })
 });

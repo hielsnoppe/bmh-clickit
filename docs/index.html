@@ -4,14 +4,16 @@
     <title>ClickIt!</title>
     <link rel="stylesheet" href="clickit.css">
 </head>
-<body>
+<body class="init">
     <p>
         Noch <span id="countdown"></span> Sekunden!
         Punkte: <span id="points"></span>
     </p>
-    <button id="start">Los geht's!</button>
     <div id="playarea">
-        <div id="target">Click me!</div>
+        <button id="start" class="init">Los geht's!</button>
+        <button id="target" class="playing">Click me!</button>
+        <p class="paused">zzZzZZZ...</p>
+        <p class="gameover">Game Over!</p>
     </div>
     <script src="clickit.js"></script>
 </body>
