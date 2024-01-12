@@ -1,3 +1,16 @@
 body {
     font-family: sans-serif;
 }
+#playarea {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    background-color: palevioletred;
+}
+#target {
+    position: absolute;
+    width: 200px;
+    height: 150px;
+    background-color: chartreuse;
+    text-align: center;
+}
