@@ -25,12 +25,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
         width: 800,
         height: 600
     }
+    let points = 0;
 
     const position = getRandomPosition(target, playarea);
     setPosition(position, e_target);
 
     e_playarea.addEventListener('click', (event) => {
+
         console.log(event.target === e_target ? 'Treffer!' : 'Daneben!');
+
+        if (event.target === e_target) {
+            points += 1;
+        }
+        else {
+            // Wähle das größere aus 0 oder points - 1
+            // points = Math.max(0, points - 1);
+            
+            // points = (points <= 0) ? 0 : points - 1;
+            points = (points > 0) ? points - 1 : 0;
+        }
+        console.log(points);
         
         const position = getRandomPosition(target, playarea);
         setPosition(position, e_target);
