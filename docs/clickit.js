@@ -1,3 +1,16 @@
+const getRandomPosition = (target, playarea) => {
+
+    const top = Math.random() * (playarea.height - target.height);
+    const left = Math.random() * (playarea.width - target.width);
+    
+    return { top: top, left: left }
+}
+const setPosition = (position, elem) => {
+
+    elem.style.top = `${position.top}px`;
+    elem.style.left = `${position.left}px`;
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
     console.log('Hello World!');
 
@@ -13,13 +26,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         height: 600
     }
 
+    const position = getRandomPosition(target, playarea);
+    setPosition(position, e_target);
+
     e_playarea.addEventListener('click', (event) => {
         console.log(event.target === e_target ? 'Treffer!' : 'Daneben!');
         
-        const top = Math.random() * (playarea.height - target.height);
-        const left = Math.random() * (playarea.width - target.width);
-
-        e_target.style.top = `${top}px`;
-        e_target.style.left = `${left}px`;
+        const position = getRandomPosition(target, playarea);
+        setPosition(position, e_target);
     });
 });
